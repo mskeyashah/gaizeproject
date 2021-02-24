@@ -86094,6 +86094,7 @@ const params = {
   applyKalmanFilter: true,
   // Whether or not to store accuracy eigenValues, used by the calibration example file
   storingPoints: false,
+  data: false,
 };
 
 /* harmony default export */ var src_params = (params);
@@ -87809,7 +87810,8 @@ var debugVideoLoc = '';
  */
 var xPast50 = new Array(50);
 var yPast50 = new Array(50);
-
+var xpoint = null;
+var ypoint = null;
 // loop parameters
 var clockStart = performance.now();
 var latestEyeFeatures = null;
@@ -88097,8 +88099,8 @@ async function loop() {
       if (src_webgazer.params.showGazeDot) {
         gazeDot.style.display = 'block';
       }
-      xpredictio = pred.x;
-      ypredictio = pred.y;
+      xpoint = pred.x;
+      ypoint = pred.y;
       gazeDot.style.transform = 'translate3d(' + pred.x + 'px,' + pred.y + 'px,0)';
     } else {
       gazeDot.style.display = 'none';
@@ -88247,7 +88249,7 @@ async function init(stream) {
   // Video and video preview
   //////////////////////////
   var topDist = '250px'
-  var leftDist = '250px'
+  var leftDist = '100px'
 
   // used for webgazer.stopVideo() and webgazer.setCameraConstraints()
   videoStream = stream;
@@ -88257,7 +88259,7 @@ async function init(stream) {
   videoElement.srcObject = stream;
   videoElement.autoplay = true;
   videoElement.style.display = src_webgazer.params.showVideo ? 'block' : 'none';
-  videoElement.style.position = 'fixed';
+  videoElement.style.position = 'absolute';
   videoElement.style.top = topDist;
   videoElement.style.left = leftDist;
   // We set these to stop the video appearing too large when it is added for the very first time
@@ -88897,6 +88899,11 @@ src_webgazer.getVideoPreviewToCameraResolutionRatio = function() {
 src_webgazer.getStoredPoints = function() {
   return [xPast50, yPast50];
 }
+
+src_webgazer.getPoints = function() {
+    return [0, 0];
+  }
+  
 
 /* harmony default export */ var src = __webpack_exports__["default"] = (src_webgazer);
 
