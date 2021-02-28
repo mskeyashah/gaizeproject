@@ -9,7 +9,7 @@
   <script src="https://d3js.org/d3.v3.min.js"></script>
 </head>
 
-<body>
+<body style="background-color: #222D39;">
   <div class="heatmap-wrapper" style="position: absolute; pointer-events: none; z-index: 999;">
     <div class="heatmap" style="height: 100vh; width: 100vw; ">
     </div>
@@ -31,13 +31,19 @@
   <div id="Train" class="tab">
     <canvas id="plotting_canvas" width="500" height="400"></canvas>
     <div id="trained" class='controls'>
-      <div style="padding-left: 30px; padding-right: 20px; padding-top: 20px; text-align: justify;">
+      <div style="padding-left: 30px; padding-right: 20px; padding-top: 10%; text-align: center;">
         <p>
-          The tracker has been calibrated. Please head over to the Implementation tab to see where your focus is using
-          a heatmap. You can try it out on the video already provided or
-          use any youtube video by entering the video id.
+          The tracker has been calibrated. Please head over to the Implementation tab to use the application and generate
+          a heatmap based on your eye movements. You can try it out on the video already provided or
+          use any youtube video by entering the video id. 
+          The video id is the argument after v= in a youtube link.
+          For example, if the youtube link is https://www.youtube.com/watch?v=8BdSzXQ6fCU&ab_channel=Wind then the video id is
+          8BdSzXQ6fCU.
         </p>
-        <p style="text-align: center;"><a onclick="Restart()" href="#">Recalibrate</a></p>
+        <div>
+          <p style="text-align: center; width: 150px; height: 35px; background-color: #4285F6; color: #FFFFFF;" class="btn"><a onclick="Restart()" href="#" style="color: white;">Recalibrate</a></p>
+        </div>
+        <button id="clrhm" class="btn" style="margin-top: 20px; width: 100px; background-color: #4285F6; color: #FFFFFF;">Clear Heatmap</button>
       </div>
     </div>
 
@@ -58,12 +64,12 @@
   <div id="Implementation" class="tab"
     style="text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%); position: absolute;">
     <div style=" display: flex;flex-direction: column;justify-content: center;align-items: center;">
-      <div class="search">
+      <div class="search" style="margin-top: 20px;">
         <input id="vid" type="text" placeholder="Enter video id" name="search">
-        <button id="play" type="submit">Play</button>
+        <button id="play" class="btn" style="width: 100px; height: 35px; background-color: #4285F6; color: #FFFFFF;" type="submit">Play</button>
       </div>
     </div>
-    <div id="drive"></div>
+    <div id="drive" style="margin-top: 30px;"></div>
     <img id="text" style="position: absolute; display: none;" src="textnotif.jpg" height="400">
   </div>
 
@@ -106,7 +112,8 @@
 
   var heatmap = h337.create({
     container: hm,
-    radius: 60
+    radius: 40,
+    maxOpacity: 0.4
   });
 
   var trackData = false;
@@ -129,12 +136,11 @@
         y: lastY
       });
       idleCount++;
-      if (idleCount > 10) {
+      if (idleCount > 20) {
         clearInterval(idleInterval);
       }
     };
     idle();
-    idleInterval = setInterval(idle, 1000);
   };
   window.onload = async function () {
 
@@ -152,7 +158,6 @@
         $target.css('top', ypred + 'px');
 
         if (idleTimeout) clearTimeout(idleTimeout);
-        if (idleInterval) clearInterval(idleInterval);
 
         if (startHeat && trackData) {
           lastX = xpred;
@@ -163,7 +168,7 @@
           });
           trackData = false;
         }
-        idleTimeout = setTimeout(startIdle, 500);
+        //idleTimeout = setTimeout(startIdle, 500);
        }).begin();
     webgazer.showVideoPreview(true) /* shows all video previews */
       .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
@@ -182,6 +187,9 @@
 
   };
 
+  $('#clrhm').click(function() {
+    heatmap.setData({ data: [] })
+  });
   // Set to true if you want to save the data even if you reload the page.
   window.saveDataAcrossSessions = true;
 
@@ -245,7 +253,7 @@
   function PopUpInstruction() {
     swal({
       title: "Calibration",
-      text: "Please click on each of the 9 points on the screen. You must click on each point 5 times till it goes yellow. This will calibrate your eye movements.",
+      text: "Please click on each of the 9 points on the screen. You must click on each point 5 times till it goes yellow. This will calibrate your eye movements. Please wait until a video with a blue mask over your face appears on the screen before clicking any points.",
       buttons: {
         cancel: false,
         confirm: true
@@ -286,7 +294,7 @@
       videoId: '8BdSzXQ6fCU',
       playerVars: {
         start: 441,
-        controls: 0,
+        controls: 1,
       },
       events: {
         'onReady': onPlayerReady,
@@ -351,7 +359,6 @@
       setTimeout(() => {
         window.clearInterval();
         var p = t / (t + f) * 100;
-        $('#drive').css('border', 'yellow');
         stopVideo();
         startHeat = false;
         alert(p + '%')
@@ -362,6 +369,7 @@
 
   function stopVideo() {
     player.stopVideo();
+    document.getElementById("drive").style.borderStyle = "none";
   }
   /**
    * Load this function when the index page starts.
@@ -424,7 +432,7 @@
   function ClearCalibration() {
     // Clear data from WebGazer
 
-    $(".Calibration").css('background-color', 'red');
+    $(".Calibration").css('background-color', 'greenyellow');
     $(".Calibration").css('opacity', 0.2);
     $(".Calibration").prop('disabled', false);
 

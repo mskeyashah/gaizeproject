@@ -10,6 +10,7 @@
 
 body {
     background-color: #222D39;
+    background: #222D39;
 }
 
 video,
@@ -21,6 +22,7 @@ canvas {
 #im {
     height: 75px;
     width: auto;
+    padding-bottom: 20px;
 }
 
 .controls {
@@ -86,12 +88,11 @@ canvas {
     text-decoration: none;
     text-align: center;
     font-size: 16px;
-    width: 137px;
-    max-width: 164px;
+    width: 100px;
+    padding-bottom: 20px;
     border: none;
     outline: none;
     color: inherit;
-    padding: 14px 16px;
     background-color: inherit;
     font-family: inherit;
     transition: 0.5s;
@@ -109,8 +110,7 @@ canvas {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    /* position: fixed; */
-    top: 0;
+    position: fixed;
     width: 100%;
     z-index: 999;
     padding-left: 2%;
@@ -174,15 +174,6 @@ body {
     z-index: 1;
 }
 
-/* Navbar styling */
-#webgazerNavbar {
-    left: 320px;
-    z-index: 0;
-    box-shadow: 0px 3px 5px #ddd;
-    border:0px;
-    background-color: #fff;
-}
-
 li {
     padding-left: 50px;
 }
@@ -197,7 +188,7 @@ li {
     -webkit-border-radius: 25px;
     -moz-border-radius: 25px;
     border-radius: 25px;
-    background-color: red;
+    background-color:greenyellow;
     opacity: 0.2;
     border-color: black;
     border-style: solid;
@@ -207,7 +198,7 @@ li {
 /* Calibration point position */
 #Pt1{
     top: 70px;
-    left:340px;
+    left:2vw;
 }
 #Pt2{
     top: 70px;
