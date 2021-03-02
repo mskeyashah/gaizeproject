@@ -14,6 +14,7 @@
     <div class="heatmap" style="height: 100vh; width: 100vw; ">
     </div>
   </div>
+ 
   <section id="nbr" class="navbar">
     <div>
       <img id="im" src="./logodark.png" />
@@ -69,6 +70,7 @@
         <button id="play" class="btn" style="width: 100px; height: 35px; background-color: #4285F6; color: #FFFFFF;" type="submit">Play</button>
       </div>
     </div>
+    <!--<div class="timeline-wrapper"> </div>-->
     <div id="drive" style="margin-top: 30px;"></div>
     <img id="text" style="position: absolute; display: none;" src="textnotif.jpg" height="400">
   </div>
@@ -96,7 +98,6 @@
   <script src="webgazer.js" type="text/javascript"></script>
   <script src="./node_modules/jquery/dist/jquery.min.js"></script>
   <script src="./node_modules/sweetalert/dist/sweetalert.min.js"></script>
-  <!--<script src="./js/main.js"></script>-->
   <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="heatmap1.min.js"></script>
 </body>
@@ -108,6 +109,12 @@
   var ypred = null;
   var trained = false;
   var startHeat = false;
+  /*var addAnim = false;
+  var animationData = [];
+  var player1;
+  var points = [];
+  var points1 = [];
+  var max = 80;*/
   var hm = document.querySelector('.heatmap');
 
   var heatmap = h337.create({
@@ -117,11 +124,15 @@
   });
 
   var trackData = false;
+  
 
   setInterval(function () {
     trackData = true;
   }, 100);
 
+  /*setInterval(function () {
+    addAnim = true;
+  }, 1000);*/
   var idleTimeout, idleInterval;
 
   var lastX, lastY;
@@ -162,6 +173,16 @@
         if (startHeat && trackData) {
           lastX = xpred;
           lastY = ypred;
+          /*var point = {
+            x: window.innerWidth -lastX,
+            y: lastY,
+            value: 50
+          };
+          points.push(point);
+          if(addAnim) {
+            var dataPoints = {max: max, data: points};
+            animationData.push(dataPoints);
+          }*/
           heatmap.addData({
             x: window.innerWidth -lastX,
             y: lastY
@@ -184,8 +205,65 @@
       canvas.style.position = 'fixed';
     };
     setup();
-
+/*for (var i = 0; i < 20; i++) {
+  animationData.push(generateRandomData(300));
+}
   };
+  function AnimationPlayer(options) {
+  this.data = options.data;
+  this.interval = null;
+  this.animationSpeed = options.animationSpeed || 300;
+  this.wrapperEl = options.wrapperEl;
+  this.isPlaying = false;
+  this.init();
+};
+AnimationPlayer.prototype = {
+  init: function() {
+    var dataLen = this.data.length;
+    this.wrapperEl.innerHTML = '';
+    var playButton = this.playButton = document.createElement('button');
+    playButton.onclick = function() {
+      if (this.isPlaying) {
+        this.stop();
+      } else {
+        this.play();
+      }
+      this.isPlaying = !this.isPlaying;
+    }.bind(this);
+    playButton.innerText = 'play';
+
+    this.wrapperEl.appendChild(playButton);
+    this.setFrame(0);
+  },
+  play: function() {
+    var dataLen = this.data.length;
+    this.playButton.innerText = 'pause';
+    this.interval = setInterval(function() {
+      this.setFrame(++this.currentFrame%dataLen);
+    }.bind(this), this.animationSpeed);
+  },
+  setFrame: function(frame) {
+          this.currentFrame = frame;
+          var snapshot = animationData[frame];
+          heatmap.setData(snapshot);
+        },
+  stop: function() {
+    clearInterval(this.interval);
+    this.playButton.innerText = animationData[0].data;
+  },
+  setAnimationData: function(data) {
+    this.isPlaying = false;
+    this.stop();
+    this.data = data;
+    this.init();
+  },
+  setAnimationSpeed: function(speed) {
+    this.isPlaying = false;
+    this.stop();
+    this.animationSpeed = speed;
+  }*/
+
+};
 
   $('#clrhm').click(function() {
     heatmap.setData({ data: [] })
@@ -294,7 +372,7 @@
       videoId: '8BdSzXQ6fCU',
       playerVars: {
         start: 441,
-        controls: 1,
+        controls: 0,
       },
       events: {
         'onReady': onPlayerReady,
@@ -361,7 +439,12 @@
         var p = t / (t + f) * 100;
         stopVideo();
         startHeat = false;
-        alert(p + '%')
+        alert(p + '%');
+        /*player1 = new AnimationPlayer({
+          wrapperEl: document.querySelector('.timeline-wrapper'),
+          data: animationData,
+          animationSpeed: 500
+        });*/
       }, 60000);
       // done = true;
     }
@@ -369,7 +452,7 @@
 
   function stopVideo() {
     player.stopVideo();
-    document.getElementById("drive").style.borderStyle = "none";
+    $('#drive').css('border', '5px solid transparent');
   }
   /**
    * Load this function when the index page starts.
